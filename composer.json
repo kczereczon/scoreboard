@@ -1,0 +1,28 @@
+{
+    "name": "kczereczon/scoreboard",
+    "description": "This is simple library that implements basic concepts of scoreboard.",
+    "type": "library",
+    "require": {
+        "php-di/php-di": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.3"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Kczereczon\\Scoreboard\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kczereczon\\Scoreboard\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Krzysztof Czereczon",
+            "email": "kczereczon@gmail.com"
+        }
+    ]
+}
