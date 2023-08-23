@@ -64,6 +64,55 @@ class SimpleMatchEntityTest extends TestCase
         $this->assertEquals('finished', $match->getStatus());
     }
 
+    public function testSetHomeTeamScore()
+    {
+        $match = $this->assembleSimpleMatchEntity();
+        $match->setHomeTeamScore(3);
+
+        $this->assertEquals(3, $match->getHomeTeamScore());
+    }
+
+    public function testSetAwayTeamScore()
+    {
+        $match = $this->assembleSimpleMatchEntity();
+        $match->setAwayTeamScore(4);
+
+        $this->assertEquals(4, $match->getAwayTeamScore());
+    }
+
+    public function testSetMatchDate()
+    {
+        $match = $this->assembleSimpleMatchEntity();
+        $match->setMatchDate(new \DateTimeImmutable('2023-08-23 20:53:00'));
+
+        $this->assertEquals(new \DateTimeImmutable('2023-08-23 20:53:00'), $match->getMatchDate());
+    }
+
+    public function testSetStatus()
+    {
+        $match = $this->assembleSimpleMatchEntity();
+        $match->setStatus('finished');
+
+        $this->assertEquals('finished', $match->getStatus());
+    }
+
+    public function testSetHomeTeam()
+    {
+        $match = $this->assembleSimpleMatchEntity();
+        $match->setHomeTeam($this->createMock(\Kczereczon\Scoreboard\Entity\TeamEntityInterface::class));
+
+        $this->assertInstanceOf(\Kczereczon\Scoreboard\Entity\TeamEntityInterface::class, $match->getHomeTeam());
+    }
+
+    public function testSetAwayTeam()
+    {
+        $match = $this->assembleSimpleMatchEntity();
+        $match->setAwayTeam($this->createMock(\Kczereczon\Scoreboard\Entity\TeamEntityInterface::class));
+
+        $this->assertInstanceOf(\Kczereczon\Scoreboard\Entity\TeamEntityInterface::class, $match->getAwayTeam());
+    }
+
+
     private function assembleSimpleMatchEntity(): SimpleMatchEntity {
         return new SimpleMatchEntity(
             1,
@@ -75,4 +124,5 @@ class SimpleMatchEntityTest extends TestCase
             'finished',
         );
     }
+
 }
