@@ -2,7 +2,7 @@
 
 namespace Kczereczon\Scoreboard\Entity;
 
-interface MatchEntityInterface
+interface MatchEntityInterface extends EntityInterface
 {
     public function getHomeTeam(): TeamEntityInterface;
     public function getAwayTeam(): TeamEntityInterface;

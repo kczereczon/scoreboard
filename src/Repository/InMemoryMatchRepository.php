@@ -3,9 +3,12 @@
 namespace Kczereczon\Scoreboard\Repository;
 
 use Kczereczon\Scoreboard\Entity\MatchEntityInterface;
+use Kczereczon\Scoreboard\Traits\EntityExists;
 
 class InMemoryMatchRepository implements MatchRepositoryInterface
 {
+
+    use EntityExists;
 
     /** @var MatchEntityInterface[] */
     private array $matches = [];
@@ -27,23 +30,12 @@ class InMemoryMatchRepository implements MatchRepositoryInterface
 
     public function save(MatchEntityInterface $match): void
     {
-        $matchId = $this->matchExists($match);
+        $matchId = $this->exists($match);
 
         if($matchId> 0) {
             $this->matches[$matchId] = $match;
         } else {
             $this->matches[] = $match;
         }
-    }
-
-    private function matchExists(MatchEntityInterface $match): int
-    {
-        foreach ($this->matches as $key => $existingMatch) {
-            if($existingMatch->getId() === $match->getId()) {
-                return $key;
-            }
-        }
-
-        return -1;
     }
 }

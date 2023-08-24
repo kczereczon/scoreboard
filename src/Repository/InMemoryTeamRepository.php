@@ -3,9 +3,12 @@
 namespace Kczereczon\Scoreboard\Repository;
 
 use Kczereczon\Scoreboard\Entity\TeamEntityInterface;
+use Kczereczon\Scoreboard\Traits\EntityExists;
 
 class InMemoryTeamRepository implements TeamRepositoryInterface
 {
+
+    use EntityExists;
 
     public function __construct(private array $teams = [])
     {
@@ -23,23 +26,12 @@ class InMemoryTeamRepository implements TeamRepositoryInterface
 
     public function save(TeamEntityInterface $team): void
     {
-        $teamId = $this->teamExists($team);
+        $teamId = $this->exists($team);
 
         if ($teamId > 0) {
             $this->teams[$teamId] = $team;
         } else {
             $this->teams[] = $team;
         }
-    }
-
-    private function teamExists(TeamEntityInterface $team): int
-    {
-        foreach ($this->teams as $key => $existingTeam) {
-            if ($existingTeam->getId() === $team->getId()) {
-                return $key;
-            }
-        }
-
-        return -1;
     }
 }
