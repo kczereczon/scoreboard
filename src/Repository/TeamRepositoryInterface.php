@@ -4,7 +4,7 @@ namespace Kczereczon\Scoreboard\Repository;
 
 use Kczereczon\Scoreboard\Entity\TeamEntityInterface;
 
-interface TeamsRepositoryInterface
+interface TeamRepositoryInterface
 {
     /**
      * @return TeamEntityInterface[]

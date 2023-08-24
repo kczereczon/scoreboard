@@ -34,7 +34,7 @@ class InMemoryMatchRepositoryTest extends TestCase
         $this->assertCount(2, $repository->getAll());
     }
 
-    public function testGetOneByIdExists()
+    public function testGetOneByIdExists(): void
     {
         $repository = new InMemoryMatchRepository();
         $match = $this->createMock(MatchEntityInterface::class);
@@ -45,14 +45,14 @@ class InMemoryMatchRepositoryTest extends TestCase
         $this->assertEquals($match, $repository->getOneById(1));
     }
 
-    public function testGetOneByIdNotExists()
+    public function testGetOneByIdNotExists(): void
     {
         $repository = new InMemoryMatchRepository();
 
         $this->assertNull($repository->getOneById(1));
     }
 
-    public function testSaveNew()
+    public function testSaveNew(): void
     {
         $repository = new InMemoryMatchRepository();
         $match = $this->createMock(MatchEntityInterface::class);
@@ -66,7 +66,7 @@ class InMemoryMatchRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testSaveUpdate()
+    public function testSaveUpdate(): void
     {
         $repository = new InMemoryMatchRepository();
 
