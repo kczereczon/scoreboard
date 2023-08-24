@@ -10,6 +10,6 @@ interface MatchRepositoryInterface
      * @return MatchEntityInterface[]
      */
     public function getAll(): array;
-    public function getOneById(int $id): MatchEntityInterface;
+    public function getOneById(int $id): ?MatchEntityInterface;
     public function save(MatchEntityInterface $match): void;
 }
