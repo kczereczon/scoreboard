@@ -2,6 +2,8 @@
 
 namespace Kczereczon\Scoreboard\Entity;
 
+use Kczereczon\Scoreboard\Enums\MatchStatus;
+
 class SimpleMatchEntity implements MatchEntityInterface
 {
 
@@ -12,7 +14,7 @@ class SimpleMatchEntity implements MatchEntityInterface
         private int $homeTeamScore,
         private int $awayTeamScore,
         private \DateTimeInterface $matchDate,
-        private string $status
+        private MatchStatus $status
     ) {
     }
 
@@ -46,7 +48,7 @@ class SimpleMatchEntity implements MatchEntityInterface
         return $this->id;
     }
 
-    public function getStatus(): string
+    public function getStatus(): MatchStatus
     {
         return $this->status;
     }
@@ -81,7 +83,7 @@ class SimpleMatchEntity implements MatchEntityInterface
         $this->matchDate = $date;
     }
 
-    public function setStatus(string $status): void
+    public function setStatus(MatchStatus $status): void
     {
         $this->status = $status;
     }

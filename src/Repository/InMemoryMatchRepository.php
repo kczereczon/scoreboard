@@ -3,6 +3,8 @@
 namespace Kczereczon\Scoreboard\Repository;
 
 use Kczereczon\Scoreboard\Entity\MatchEntityInterface;
+use Kczereczon\Scoreboard\Entity\TeamEntityInterface;
+use Kczereczon\Scoreboard\Enums\MatchStatus;
 use Kczereczon\Scoreboard\Traits\EntityExists;
 
 class InMemoryMatchRepository implements MatchRepositoryInterface
@@ -32,10 +34,110 @@ class InMemoryMatchRepository implements MatchRepositoryInterface
     {
         $matchId = $this->exists($match);
 
-        if($matchId> 0) {
+        if ($matchId > 0) {
             $this->matches[$matchId] = $match;
         } else {
             $this->matches[] = $match;
         }
+    }
+
+    public function getDuringMatches(): array
+    {
+        return array_filter(
+            $this->matches,
+            static fn(MatchEntityInterface $match) => $match->getStatus() === MatchStatus::DURING
+        );
+    }
+
+    public function updateScore(int $matchId, int $homeScore, int $awayScore, bool $flush = true): void
+    {
+        $match = $this->getOneById($matchId);
+
+        if(!$match) {
+            throw new \RuntimeException('Match does not exist');
+        }
+
+        $match->setHomeTeamScore($homeScore);
+        $match->setAwayTeamScore($awayScore);
+
+        if($flush) {
+            $this->save($match);
+        }
+    }
+
+    public function endMatch(int $matchId, bool $flush = true): void
+    {
+        $match = $this->getOneById($matchId);
+
+        if (!$match) {
+            throw new \RuntimeException('Match does not exist');
+        }
+
+        if($match->getStatus() !== MatchStatus::DURING) {
+            throw new \RuntimeException('Match must me in during status');
+        }
+
+        $match->setStatus(MatchStatus::FINISHED);
+
+        if($flush) {
+            $this->save($match);
+        }
+    }
+
+    public function startMatch(int $matchId, bool $flush = true): void
+    {
+        $match = $this->getOneById($matchId);
+
+        if (!$match) {
+            throw new \RuntimeException('Match does not exist');
+        }
+
+        if($match->getStatus() !== MatchStatus::NOT_STARTED) {
+            throw new \RuntimeException('Match must me in not started status');
+        }
+
+        $match->setStatus(MatchStatus::DURING);
+
+        if($flush) {
+            $this->save($match);
+        }
+    }
+
+    public function getWinner(int $matchId): TeamEntityInterface
+    {
+        $match = $this->getOneById($matchId);
+
+        if(!$match) {
+            throw new \RuntimeException('Match does not exist');
+        }
+
+        if($match->getStatus() !== MatchStatus::FINISHED) {
+            throw new \RuntimeException('Match must me in finished status');
+        }
+
+        if($match->getHomeTeamScore() > $match->getAwayTeamScore()) {
+            return $match->getHomeTeam();
+        }
+
+        return $match->getAwayTeam();
+    }
+
+    public function getLooser(int $matchId): TeamEntityInterface
+    {
+        $match = $this->getOneById($matchId);
+
+        if(!$match) {
+            throw new \RuntimeException('Match does not exist');
+        }
+
+        if($match->getStatus() !== MatchStatus::FINISHED) {
+            throw new \RuntimeException('Match must me in finished status');
+        }
+
+        if($match->getHomeTeamScore() < $match->getAwayTeamScore()) {
+            return $match->getHomeTeam();
+        }
+
+        return $match->getAwayTeam();
     }
 }

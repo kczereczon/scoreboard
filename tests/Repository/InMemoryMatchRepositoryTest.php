@@ -5,6 +5,7 @@ namespace Kczereczon\Scoreboard\Tests\Repository;
 use Kczereczon\Scoreboard\Entity\MatchEntityInterface;
 use Kczereczon\Scoreboard\Entity\SimpleMatchEntity;
 use Kczereczon\Scoreboard\Entity\TeamEntityInterface;
+use Kczereczon\Scoreboard\Enums\MatchStatus;
 use Kczereczon\Scoreboard\Repository\InMemoryMatchRepository;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
@@ -77,7 +78,7 @@ class InMemoryMatchRepositoryTest extends TestCase
             0,
             0,
             new \DateTimeImmutable("now"),
-            'during'
+            MatchStatus::DURING
         );
 
         $repository->save($match);

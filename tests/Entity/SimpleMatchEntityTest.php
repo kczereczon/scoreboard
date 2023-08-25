@@ -3,6 +3,7 @@
 namespace Kczereczon\Scoreboard\Tests\Entity;
 
 use Kczereczon\Scoreboard\Entity\SimpleMatchEntity;
+use Kczereczon\Scoreboard\Enums\MatchStatus;
 use PHPUnit\Framework\TestCase;
 
 class SimpleMatchEntityTest extends TestCase
@@ -61,7 +62,7 @@ class SimpleMatchEntityTest extends TestCase
     {
         $match = $this->assembleSimpleMatchEntity();
 
-        $this->assertEquals('finished', $match->getStatus());
+        $this->assertEquals(MatchStatus::FINISHED, $match->getStatus());
     }
 
     public function testSetHomeTeamScore()
@@ -91,9 +92,9 @@ class SimpleMatchEntityTest extends TestCase
     public function testSetStatus()
     {
         $match = $this->assembleSimpleMatchEntity();
-        $match->setStatus('finished');
+        $match->setStatus(MatchStatus::FINISHED);
 
-        $this->assertEquals('finished', $match->getStatus());
+        $this->assertEquals(MatchStatus::FINISHED, $match->getStatus());
     }
 
     public function testSetHomeTeam()
@@ -121,7 +122,7 @@ class SimpleMatchEntityTest extends TestCase
             1,
             2,
             new \DateTimeImmutable('2023-08-23 19:53:00'),
-            'finished',
+            MatchStatus::FINISHED
         );
     }
 
