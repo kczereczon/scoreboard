@@ -113,6 +113,13 @@ class SimpleMatchEntityTest extends TestCase
         $this->assertInstanceOf(\Kczereczon\Scoreboard\Entity\TeamEntityInterface::class, $match->getAwayTeam());
     }
 
+    public function testGetAddedAt()
+    {
+        $match = $this->assembleSimpleMatchEntity();
+
+        $this->assertInstanceOf(\DateTime::class, $match->getAddedAt());
+    }
+
 
     private function assembleSimpleMatchEntity(): SimpleMatchEntity {
         return new SimpleMatchEntity(

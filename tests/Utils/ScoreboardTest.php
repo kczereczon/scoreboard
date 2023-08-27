@@ -39,13 +39,16 @@ class ScoreboardTest extends TestCase
         $match1 = $this->createMock(MatchEntityInterface::class);
         $match2 = $this->createMock(MatchEntityInterface::class);
         $match3 = $this->createMock(MatchEntityInterface::class);
+        $match4 = $this->createMock(MatchEntityInterface::class);
 
-        $match1->expects(self::once())->method('getTotalScore')->willReturn(12);
-        $match1->expects(self::once())->method('getAddedAt')->willReturn(new \DateTime('2023-08-27 10:06:00'));
-        $match2->expects(self::once())->method('getTotalScore')->willReturn(12);
-        $match2->expects(self::once())->method('getAddedAt')->willReturn(new \DateTime('2023-08-27 12:06:00'));
-        $match3->expects(self::once())->method('getTotalScore')->willReturn(10);
-        $match2->expects(self::once())->method('getAddedAt')->willReturn(new \DateTime('2023-08-27 13:06:00'));
+        $match1->expects(self::atLeastOnce())->method('getTotalScore')->willReturn(12);
+        $match1->expects(self::atLeastOnce())->method('getAddedAt')->willReturn(new \DateTime('2023-08-27 10:06:00'));
+        $match2->expects(self::atLeastOnce())->method('getTotalScore')->willReturn(12);
+        $match2->expects(self::atLeastOnce())->method('getAddedAt')->willReturn(new \DateTime('2023-08-27 12:06:00'));
+        $match3->expects(self::atLeastOnce())->method('getTotalScore')->willReturn(10);
+        $match3->expects(self::atLeastOnce())->method('getAddedAt')->willReturn(new \DateTime('2023-08-27 13:06:00'));
+        $match4->expects(self::atLeastOnce())->method('getTotalScore')->willReturn(6);
+        $match4->expects(self::atLeastOnce())->method('getAddedAt')->willReturn(new \DateTime('2023-08-27 14:06:00'));
 
         $matchRepository = $this->createMock(MatchRepositoryInterface::class);
         $matchRepository->expects(self::once())->method('getMatchesWithStatues')->with(
@@ -58,7 +61,8 @@ class ScoreboardTest extends TestCase
             [
                 $match1,
                 $match2,
-                $match3
+                $match3,
+                $match4
             ]
         );
 
@@ -69,7 +73,8 @@ class ScoreboardTest extends TestCase
         $this->assertEquals([
             $match2,
             $match1,
-            $match3
+            $match3,
+            $match4
         ], $scoreboard->getSummary());
     }
 }

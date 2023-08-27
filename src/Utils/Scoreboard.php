@@ -26,6 +26,15 @@ class Scoreboard implements ScoreboardInterface
 
     public function getSummary(): array
     {
+        $matches = $this->getMatches();
 
+        array_rand($matches);
+        usort(
+            $matches,
+            static fn(MatchEntityInterface $aMatch, MatchEntityInterface $bMatch) => $aMatch->getTotalScore(
+                ) + $aMatch->getAddedAt()->getTimestamp() > $bMatch->getTotalScore() + $bMatch->getAddedAt()->getTimestamp()
+        );
+
+        return $matches;
     }
 }
