@@ -4,13 +4,19 @@ namespace Kczereczon\Scoreboard\Utils;
 
 use Kczereczon\Scoreboard\Entity\MatchEntityInterface;
 use Kczereczon\Scoreboard\Entity\TeamEntityInterface;
+use Kczereczon\Scoreboard\Enums\MatchStatus;
 use Kczereczon\Scoreboard\Repository\MatchRepositoryInterface;
 
 class Scoreboard implements ScoreboardInterface
 {
-    public function __construct(private MatchRepositoryInterface $matchRepository)
-    {
-
+    public function __construct(
+        private MatchRepositoryInterface $matchRepository,
+        private array $statuesToBeShown = [
+            MatchStatus::DURING,
+            MatchStatus::NOT_STARTED,
+            MatchStatus::FINISHED
+        ]
+    ) {
     }
 
     public function addMatch(MatchEntityInterface $matchEntity): void
@@ -26,7 +32,7 @@ class Scoreboard implements ScoreboardInterface
 
     public function getMatches(): array
     {
-        return $this->matchRepository->getDuringMatches();
+        return $this->matchRepository->getMatchesWithStatues($this->statuesToBeShown);
     }
 
     public function getMatch(int $matchId): ?MatchEntityInterface
@@ -59,13 +65,8 @@ class Scoreboard implements ScoreboardInterface
         $this->matchRepository->startMatch($matchId);
     }
 
-    public function render()
+    public function getSummary()
     {
-        // TODO: Implement render() method.
-    }
-
-    public function renderSummary()
-    {
-        // TODO: Implement renderSummary() method.
+        // TODO: Implement getSummary() method.
     }
 }

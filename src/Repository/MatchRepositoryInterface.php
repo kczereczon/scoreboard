@@ -4,6 +4,7 @@ namespace Kczereczon\Scoreboard\Repository;
 
 use Kczereczon\Scoreboard\Entity\MatchEntityInterface;
 use Kczereczon\Scoreboard\Entity\TeamEntityInterface;
+use Kczereczon\Scoreboard\Enums\MatchStatus;
 
 interface MatchRepositoryInterface
 {
@@ -27,4 +28,7 @@ interface MatchRepositoryInterface
     public function endMatch(int $matchId): void;
 
     public function startMatch(int $matchId): void;
+
+    /** @param MatchStatus[] $matchStatues */
+    public function getMatchesWithStatues(array $matchStatues);
 }

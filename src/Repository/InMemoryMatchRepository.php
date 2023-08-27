@@ -144,4 +144,12 @@ class InMemoryMatchRepository implements MatchRepositoryInterface
 
         return $match->getAwayTeam();
     }
+
+    public function getMatchesWithStatues(array $matchStatues)
+    {
+        return array_filter(
+            $this->matches,
+            static fn(MatchEntityInterface $match) => in_array($match->getStatus(), $matchStatues)
+        );
+    }
 }

@@ -530,4 +530,51 @@ class InMemoryMatchRepositoryTest extends TestCase
 
         $inMemoryMatchRepository->getLooser(1);
     }
+
+    /** @dataProvider subsetGeneratorOfMatchStatusesDataProvider */
+    public function testGetMatchWithStatues(array $statuses): void
+    {
+        $matches = [];
+
+        foreach (MatchStatus::cases() as $case) {
+            $matches[] =
+                new SimpleMatchEntity(
+                    1,
+                    $this->createMock(TeamEntityInterface::class),
+                    $this->createMock(TeamEntityInterface::class),
+                    1,
+                    0,
+                    new \DateTimeImmutable('2023-08-27 09:59:00'),
+                    $case
+                );
+        }
+
+        $inMemoryMatchRepository = new InMemoryMatchRepository(
+            $matches
+        );
+
+        $this->assertCount(count($statuses), $inMemoryMatchRepository->getMatchesWithStatues($statuses));
+    }
+
+    public static function subsetGeneratorOfMatchStatusesDataProvider()
+    {
+        $subsets = [[]];
+
+        foreach (MatchStatus::cases() as $element) {
+            $newSubsets = [];
+
+            foreach ($subsets as $subset) {
+                $newSubset = $subset;
+                $newSubset[] = $element;
+                $newSubsets[] = $newSubset;
+            }
+
+            $subsets = array_merge($subsets, $newSubsets);
+        }
+
+        array_shift($subsets);
+        array_walk($subsets, static fn(&$subset) => $subset = [$subset]);
+
+        return $subsets;
+    }
 }
