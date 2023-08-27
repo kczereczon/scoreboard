@@ -7,6 +7,8 @@ use Kczereczon\Scoreboard\Enums\MatchStatus;
 class SimpleMatchEntity implements MatchEntityInterface
 {
 
+    private \DateTime $addedAt;
+
     public function __construct(
         private int $id,
         private TeamEntityInterface $homeTeam,
@@ -14,8 +16,10 @@ class SimpleMatchEntity implements MatchEntityInterface
         private int $homeTeamScore,
         private int $awayTeamScore,
         private \DateTimeInterface $matchDate,
-        private MatchStatus $status
+        private MatchStatus $status,
     ) {
+
+        $this->addedAt = new \DateTime();
     }
 
     public function getHomeTeam(): TeamEntityInterface
@@ -94,5 +98,10 @@ class SimpleMatchEntity implements MatchEntityInterface
     public function setStatus(MatchStatus $status): void
     {
         $this->status = $status;
+    }
+
+    public function getAddedAt(): \DateTime
+    {
+        return $this->addedAt;
     }
 }
