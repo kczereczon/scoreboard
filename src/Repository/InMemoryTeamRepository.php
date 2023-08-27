@@ -28,7 +28,7 @@ class InMemoryTeamRepository implements TeamRepositoryInterface
     {
         $teamId = $this->exists($team);
 
-        if ($teamId > 0) {
+        if ($teamId > -1) {
             $this->teams[$teamId] = $team;
         } else {
             $this->teams[] = $team;

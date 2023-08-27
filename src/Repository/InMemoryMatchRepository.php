@@ -34,7 +34,7 @@ class InMemoryMatchRepository implements MatchRepositoryInterface
     {
         $matchId = $this->exists($match);
 
-        if ($matchId > 0) {
+        if ($matchId > -1) {
             $this->matches[$matchId] = $match;
         } else {
             $this->matches[] = $match;
@@ -49,7 +49,7 @@ class InMemoryMatchRepository implements MatchRepositoryInterface
         );
     }
 
-    public function updateScore(int $matchId, int $homeScore, int $awayScore, bool $flush = true): void
+    public function updateScore(int $matchId, int $homeScore, int $awayScore, bool $flush = true): MatchEntityInterface
     {
         $match = $this->getOneById($matchId);
 
@@ -57,12 +57,16 @@ class InMemoryMatchRepository implements MatchRepositoryInterface
             throw new \RuntimeException('Match does not exist');
         }
 
+        $match = clone ($match);
+
         $match->setHomeTeamScore($homeScore);
         $match->setAwayTeamScore($awayScore);
 
         if($flush) {
             $this->save($match);
         }
+
+        return $match;
     }
 
     public function endMatch(int $matchId, bool $flush = true): void

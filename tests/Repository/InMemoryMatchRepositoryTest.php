@@ -199,6 +199,50 @@ class InMemoryMatchRepositoryTest extends TestCase
         ];
     }
 
+    public function testUpdateScoreWithoutFlush(): void
+    {
+        $inMemoryMatchRepository = new InMemoryMatchRepository([
+            new SimpleMatchEntity(
+                1,
+                $this->createMock(TeamEntityInterface::class),
+                $this->createMock(TeamEntityInterface::class),
+                0,
+                0,
+                new \DateTimeImmutable('2023-08-27 09:59:00'),
+                MatchStatus::FINISHED
+            ),
+        ]);
+
+        $match = $inMemoryMatchRepository->updateScore(1, 0, 1, false);
+
+        $this->assertEquals(0, $match->getHomeTeamScore());
+        $this->assertEquals(1, $match->getAwayTeamScore());
+        $this->assertEquals(0, $inMemoryMatchRepository->getOneById(1)->getHomeTeamScore());
+        $this->assertEquals(0, $inMemoryMatchRepository->getOneById(1)->getAwayTeamScore());
+    }
+
+    public function testUpdateScoreWithFlush(): void
+    {
+        $inMemoryMatchRepository = new InMemoryMatchRepository([
+            new SimpleMatchEntity(
+                1,
+                $this->createMock(TeamEntityInterface::class),
+                $this->createMock(TeamEntityInterface::class),
+                0,
+                0,
+                new \DateTimeImmutable('2023-08-27 09:59:00'),
+                MatchStatus::FINISHED
+            ),
+        ]);
+
+        $match = $inMemoryMatchRepository->updateScore(1, 0, 1, true);
+
+        $this->assertEquals(0, $match->getHomeTeamScore());
+        $this->assertEquals(1, $match->getAwayTeamScore());
+        $this->assertEquals(0, $inMemoryMatchRepository->getOneById(1)->getHomeTeamScore());
+        $this->assertEquals(1, $inMemoryMatchRepository->getOneById(1)->getAwayTeamScore());
+    }
+
     public function testEndMatchButMatchDoesntExist(): void
     {
         $inMemoryMatchRepository = new InMemoryMatchRepository();
@@ -410,5 +454,80 @@ class InMemoryMatchRepositoryTest extends TestCase
         );
 
         return $array;
+    }
+
+    /** @dataProvider matchStatusesWithoutFinishedDataProvider */
+    public function testGetLooserMatchHasNotBeenFinished(MatchStatus $status): void
+    {
+        $inMemoryMatchRepository = new InMemoryMatchRepository(
+            [
+                new SimpleMatchEntity(
+                    1,
+                    $this->createMock(TeamEntityInterface::class),
+                    $this->createMock(TeamEntityInterface::class),
+                    0,
+                    0,
+                    new \DateTimeImmutable('2023-08-27 09:59:00'),
+                    $status
+                ),
+            ]
+        );
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Match must be in finished status');
+
+        $inMemoryMatchRepository->getLooser(1);
+    }
+
+    public function testGetLooserSuccessfulHomeWinner(): void
+    {
+        $homeTeam = $this->createMock(TeamEntityInterface::class);
+
+        $inMemoryMatchRepository = new InMemoryMatchRepository(
+            [
+                new SimpleMatchEntity(
+                    1,
+                    $homeTeam,
+                    $this->createMock(TeamEntityInterface::class),
+                    0,
+                    1,
+                    new \DateTimeImmutable('2023-08-27 09:59:00'),
+                    MatchStatus::FINISHED
+                ),
+            ]
+        );
+
+        $this->assertEquals($homeTeam, $inMemoryMatchRepository->getLooser(1));
+    }
+
+    public function testGetLooserSuccessfulAwayWinner(): void
+    {
+        $awayTeam = $this->createMock(TeamEntityInterface::class);
+
+        $inMemoryMatchRepository = new InMemoryMatchRepository(
+            [
+                new SimpleMatchEntity(
+                    1,
+                    $this->createMock(TeamEntityInterface::class),
+                    $awayTeam,
+                    1,
+                    0,
+                    new \DateTimeImmutable('2023-08-27 09:59:00'),
+                    MatchStatus::FINISHED
+                ),
+            ]
+        );
+
+        $this->assertEquals($awayTeam, $inMemoryMatchRepository->getLooser(1));
+    }
+
+    public function testGetLooserButMatchDoesntExist(): void
+    {
+        $inMemoryMatchRepository = new InMemoryMatchRepository();
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Match does not exist');
+
+        $inMemoryMatchRepository->getLooser(1);
     }
 }
