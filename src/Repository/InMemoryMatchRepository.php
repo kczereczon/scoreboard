@@ -74,7 +74,7 @@ class InMemoryMatchRepository implements MatchRepositoryInterface
         }
 
         if($match->getStatus() !== MatchStatus::DURING) {
-            throw new \RuntimeException('Match must me in during status');
+            throw new \RuntimeException('Match must be in during status');
         }
 
         $match->setStatus(MatchStatus::FINISHED);
@@ -93,7 +93,7 @@ class InMemoryMatchRepository implements MatchRepositoryInterface
         }
 
         if($match->getStatus() !== MatchStatus::NOT_STARTED) {
-            throw new \RuntimeException('Match must me in not started status');
+            throw new \RuntimeException('Match must be in not started status');
         }
 
         $match->setStatus(MatchStatus::DURING);
@@ -112,7 +112,7 @@ class InMemoryMatchRepository implements MatchRepositoryInterface
         }
 
         if($match->getStatus() !== MatchStatus::FINISHED) {
-            throw new \RuntimeException('Match must me in finished status');
+            throw new \RuntimeException('Match must be in finished status');
         }
 
         if($match->getHomeTeamScore() > $match->getAwayTeamScore()) {
@@ -131,7 +131,7 @@ class InMemoryMatchRepository implements MatchRepositoryInterface
         }
 
         if($match->getStatus() !== MatchStatus::FINISHED) {
-            throw new \RuntimeException('Match must me in finished status');
+            throw new \RuntimeException('Match must be in finished status');
         }
 
         if($match->getHomeTeamScore() < $match->getAwayTeamScore()) {

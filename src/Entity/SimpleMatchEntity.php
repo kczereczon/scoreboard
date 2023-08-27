@@ -70,11 +70,19 @@ class SimpleMatchEntity implements MatchEntityInterface
 
     public function setHomeTeamScore(int $score): void
     {
+        if($score < 0) {
+            throw new \RuntimeException('New score values cannot be negative');
+        }
+
         $this->homeTeamScore = $score;
     }
 
     public function setAwayTeamScore(int $score): void
     {
+        if($score < 0) {
+            throw new \RuntimeException('New score values cannot be negative');
+        }
+
         $this->awayTeamScore = $score;
     }
 
